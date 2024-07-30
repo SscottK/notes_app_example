@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= note.text %></title>
+</head>
+<body>
+  <h1><%= note.text %></h1>
+  <% if(note.isRead){ %>
+    <p>This note has been read!</p>
+  <% } else { %>
+    <p>This note is unread!</p>
+  <% } %>
+  <form action="/notes/<%=note._id%>?_method=DELETE" method="POST">
+    <button type="submit">
+      Delete <%= note._id %>
+    </button>
+  </form>
+  <a href="/notes/<%= note._id %>/edit">Edit <%= note._id %></a>
+  <a href="/notes">Back to Notes</a>
+</body>
+</html>
