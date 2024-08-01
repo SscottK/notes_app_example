@@ -1,6 +1,7 @@
 require('dotenv').config()
 const express =  require('express')
 const app = express()
+const methodOverride = require('method-override')
 const mongoose = require('mongoose')
 const MONGO_URI = process.env.MONGO_URI
 const Note = require('./models/note')
@@ -10,6 +11,8 @@ const PORT = 3000
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))//we are ablt to parse the body and accept urlencoded data which is the default form data
 app.use(logger('tiny'))
+app.use(methodOverride('_method'))
+
 
 mongoose.connect(MONGO_URI)
 
@@ -108,23 +111,32 @@ app.get('/notes/:id', async (req, res) => {
 //     }
 // })
 
+app.get('/notes/:id/edit', async (req, res) => {
+    const foundNote = await Note.findOne({ _id: req.params.id})
+    res.render('edit.ejs', {
+        note: foundNote
+    })
+})
 
-app.put('/notes/:id', async (req, res) => {
+app.put('/notes/:id/', async (req, res) => {
+    req.body.isRead === 'on' || req.body.isRead === true? 
+    req.body.isRead = true : 
+    req.body.isRead = false
     try {
         const updatedNote = await Note.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true })// new: true sends the updated version
-        res.render('edit.ejs', {
-            note: updatedNote
-        })
+        res.redirect(`/notes/${updatedNote._id}`)
     } catch (error) {
         res.status(400).json({ msg: error.message})
     }
 })
+
+
 //DELETE
 app.delete('/notes/:id', async (req, res) => {
     try {
         await Note.findOneAndDelete({ _id: req.params.id })
         .then((note) => {
-            res.sendStatus(204)
+            res.redirect('/notes')
         })        
     } catch (error) {
         res.status(400).json({ msg: error.message })

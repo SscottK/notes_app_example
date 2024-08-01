@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Edit <%=fruit.name%></title>
+  <title>Edit <%= note.text%></title>
 </head>
 <body>
   <h1>Edit <%= note.text %></h1>
-  <form action="/notes/<%=note._id%>?_method=PUT" method="POST">
-    <label for="name">Name:</label>
-    <input type="text" name="name" value="<%= fruit.name %>" />
+  <form action="/notes/<%= note._id%>?_method=PUT" method="POST">
+    <label for="text">Text:</label>
+    <input type="text" name="text" value="<%= note.text %>" />
     <label for="is-read">Note Read</label>
     <input
       type="checkbox"
@@ -18,6 +18,6 @@
       />
     <button type="submit">Update Note</button>
   </form>
-  <a href="/fruits">Back to Notes</a>
+  <a href="/notes">Back to Notes</a>
 </body>
 </html>
